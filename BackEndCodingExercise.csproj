@@ -9,10 +9,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BackEndCodingExercise.Data\BackEndCodingExercise.Data.csproj" />
+    <ProjectReference Include="..\BackEndCodingExercise.Service\BackEndCodingExercise.Service.csproj" />
   </ItemGroup>
 
 </Project>

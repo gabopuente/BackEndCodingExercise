@@ -8,6 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackEndCodingExercise.Data.Models;
+using BackEndCodingExercise.Data.Transactions;
+using BackEndCodingExercise.Service.Interfaces;
+using BackEndCodingExercise.Service.Services;
+using Microsoft.EntityFrameworkCore;
+
+using BackEndCodingExercise.Data;
+
 
 namespace BackEndCodingExercise
 {
@@ -23,6 +31,12 @@ namespace BackEndCodingExercise
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<BackEndCodingExerciseContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
+            services.AddTransient<ITransactionService, TransactionService>();
+            
+
             services.AddControllersWithViews();
         }
 
