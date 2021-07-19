@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEndCodingExercise.Data.Models;
 using BackEndCodingExercise.Data.Transactions;
+using BackEndCodingExercise.Data.Invoices;
 using BackEndCodingExercise.Service.Interfaces;
 using BackEndCodingExercise.Service.Services;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,9 @@ namespace BackEndCodingExercise
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITransactionService, TransactionService>();
-            
+            services.AddTransient<IInvoiceRepository, InvoiceRepository>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
+
 
             services.AddControllersWithViews();
         }

@@ -12,9 +12,12 @@ namespace BackEndCodingExercise.Controllers
     public class TransactionController : Controller
     {
         private readonly ITransactionService _transactionService;
-        public TransactionController(ITransactionService transactionService)
+        private readonly IInvoiceService _invoiceService;
+        public TransactionController(ITransactionService transactionService
+            , IInvoiceService invoiceService)
         {
             _transactionService = transactionService;
+            _invoiceService = invoiceService;
         }
 
         public IActionResult Index()
@@ -35,7 +38,7 @@ namespace BackEndCodingExercise.Controllers
             return await _transactionService.AddAsync(tran);
 
         }
-        public ActionResult<List<Invoice>> GenerateInvoicesByDateRange()
+        public IActionResult GenerateInvoicesByDateRange()
         {
             List<Transaction> transList= new List<Transaction>();
             transList.Add(new Transaction
@@ -79,9 +82,12 @@ namespace BackEndCodingExercise.Controllers
             List<Invoice> invoicesList = new List<Invoice>();
             unbilledTransactions.ForEach(t =>
                {
-                   invoicesList.Add(new Invoice { InvoiceDate = DateTime.Now, TransactionId = t.TransactionId });
+                   _invoiceService.AddAsync(new Invoice { InvoiceDate = DateTime.Now, TransactionId = t.TransactionId });
                });
-            return invoicesList;
+
+
+            return Ok(invoicesList) ;
+            
         }
         public async Task<ActionResult<Transaction>> UpdateTransactionStatus()
         {
@@ -112,6 +118,32 @@ namespace BackEndCodingExercise.Controllers
             {
                 return NotFound();
             }
+
+        }
+
+        public async Task<ActionResult<Transaction>> ApplyPayment()
+        {
+            //Transaction creation as Unbilled
+            var tran = new Transaction
+            {
+                TransactionDate = DateTime.Now,
+                TransactionDescription = "Test transaction",
+                TransactionAmmount = 50000,
+                TransactionPaymentStatus = TransactionStatuses.UnBilled
+            };
+            await _transactionService.AddAsync(tran);
+
+            //Invoice creation
+            Invoice invoice = new Invoice
+            {
+                InvoiceDate = DateTime.Today,
+                TransactionId = tran.TransactionId
+            };
+            await _invoiceService.AddAsync(invoice);
+
+            return await _invoiceService.ApplyPayment(invoice.InvoiceId, 51000);
+
+
 
         }
     }
