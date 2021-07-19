@@ -72,7 +72,7 @@ namespace BackEndCodingExercise.Controllers
             //4 transactions are created 
             _transactionService.AddRange(transList);
 
-            //but only will be eligible for invoicing
+            //but only 2 will be eligible for invoicing
             List<Transaction> unbilledTransactions = _transactionService.Find(x => x.TransactionPaymentStatus == TransactionStatuses.UnBilled 
                                                                 && (x.TransactionDate >= DateTime.Now.AddDays(-30) 
                                                                 && x.TransactionDate <= DateTime.Now)).ToList();
